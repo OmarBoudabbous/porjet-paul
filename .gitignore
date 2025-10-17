@@ -1,0 +1,118 @@
+# =============================
+# 🐍 DJANGO BACKEND (lms_project)
+# =============================
+
+# Virtual environments
+lms_project/venv/
+lms_project/env/
+
+# Compiled Python files
+lms_project/**/*.py[cod]
+lms_project/**/__pycache__/
+
+# Django stuff:
+lms_project/db.sqlite3
+lms_project/*.sqlite3
+lms_project/staticfiles/
+lms_project/media/
+lms_project/static/
+lms_project/*.log
+
+# Local settings and environment variables
+lms_project/.env
+lms_project/*.env
+lms_project/core/local_settings.py
+
+# Migrations cache
+lms_project/**/migrations/__pycache__/
+
+# IDE / OS files
+*.idea/
+*.vscode/
+*.DS_Store
+*.iml
+Thumbs.db
+Desktop.ini
+
+
+# =============================
+# ⚛️ REACT FRONTEND (project)
+# =============================
+
+project/node_modules/
+project/build/
+project/dist/
+project/.cache/
+project/.vite/
+project/.parcel-cache/
+project/.turbo/
+project/.next/
+
+# Environment variables
+project/.env
+project/.env.local
+project/.env.development.local
+project/.env.test.local
+project/.env.production.local
+
+# Logs
+project/npm-debug.log*
+project/yarn-debug.log*
+project/yarn-error.log*
+project/pnpm-debug.log*
+project/*.log
+
+# IDE / OS
+project/.idea/
+project/.vscode/
+project/.DS_Store
+project/.history/
+
+# Lint / coverage
+project/.eslintcache
+project/.stylelintcache
+project/coverage/
+
+# Misc
+project/*.lock
+project/*.tmp
+project/*.bak
+
+
+# =============================
+# 🌍 GLOBAL (pour les deux)
+# =============================
+
+# Archives et sauvegardes
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
+
+# Python build artifacts
+*.egg-info/
+*.eggs/
+build/
+dist/
+
+# Logs & temporary files
+*.log
+*.swp
+*.swo
+*.tmp
+
+# System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VSCode / PyCharm
+.vscode/
+.idea/
+.history
+
+# =============================
+# ✅ END
+# =============================

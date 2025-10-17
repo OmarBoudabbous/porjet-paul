@@ -13,6 +13,7 @@ import StudentDashboard from './pages/Student/StudentDashboard';
 import LearningCoursesPage from './pages/Student/LearningCoursesPage';
 import EconometricCoursesPage from './pages/Student/EconometricCoursesPage';
 import StudentProfile from './pages/Student/StudentProfile';
+import CourseDetail from './pages/Courses/CourseDetail';  // ✅ ajouté ici
 
 // Instructor pages
 import InstructorDashboard from './pages/Instructor/InstructorDashboard';
@@ -60,7 +61,7 @@ const AppContent: React.FC = () => {
         path="/student/courses/econometric"
         element={
           <ProtectedRoute allowedRoles={['student']}>
-            <EconometricCoursesPage /> {/* new page */}
+            <EconometricCoursesPage />
           </ProtectedRoute>
         }
       />
@@ -68,10 +69,20 @@ const AppContent: React.FC = () => {
         path="/student/courses/learning"
         element={
           <ProtectedRoute allowedRoles={['student']}>
-            <LearningCoursesPage /> {/* new page */}
+            <LearningCoursesPage />
           </ProtectedRoute>
         }
       />
+      {/* ✅ Nouvelle route pour le détail d’un cours */}
+      <Route
+        path="/student/courses/:id"
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <CourseDetail />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/student/profile"
         element={

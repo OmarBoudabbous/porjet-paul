@@ -35,13 +35,27 @@ export const coursesAPI = {
   },
 
   // All courses (combined)
+  // All courses (combined)
   async getAllCourses(): Promise<Course[]> {
     const [econometric, learning] = await Promise.all([
       this.getEconometricCourses(),
       this.getLearningCourses(),
     ]);
-    return [...econometric, ...learning];
+
+    // ✅ On ajoute manuellement un champ course_type pour les distinguer
+    const ecoWithType = econometric.map((c) => ({
+      ...c,
+      course_type: "econometric",
+    }));
+
+    const learnWithType = learning.map((c) => ({
+      ...c,
+      course_type: "learning",
+    }));
+
+    return [...ecoWithType, ...learnWithType];
   },
+
 
   async createCourse(data: FormData): Promise<Course> {
     const response = await apiClient.post('/courses/econometric/', data, {
@@ -108,7 +122,7 @@ export const coursesAPI = {
     const response = await apiClient.get('/courses/enrollments/');
     return response.data;
   },
-  
+
   async getEconometricCourse(id: number): Promise<Course> {
     const response = await apiClient.get(`/courses/econometric/${id}/`);
     return response.data;
@@ -116,6 +130,20 @@ export const coursesAPI = {
 
   async getLearningCourse(id: number): Promise<Course> {
     const response = await apiClient.get(`/courses/learning/${id}/`);
+    return response.data;
+  },
+  async enrollInCourse(
+    courseId: number,
+    type: "econometric" | "learning",
+    payload: Record<string, any> = {}
+  ): Promise<Enrollment> {
+    // Example: /courses/econometric/{id}/enroll/ or /courses/learning/{id}/enroll/
+    const endpoint =
+      type === "econometric"
+        ? `/courses/econometric/${courseId}/enroll/`
+        : `/courses/learning/${courseId}/enroll/`;
+
+    const response = await apiClient.post(endpoint, payload);
     return response.data;
   },
 };

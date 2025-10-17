@@ -28,12 +28,11 @@ const CourseDetail: React.FC = () => {
       setLoading(true);
 
       // On récupère toutes les inscriptions du user
-      const [econometricCourses, learningCourses, enrollmentsData] =
-        await Promise.all([
-          coursesAPI.getEconometricCourses(),
-          coursesAPI.getLearningCourses(),
-          coursesAPI.getEnrollments(),
-        ]);
+      const [econometricCourses, learningCourses, enrollmentsData] = await Promise.all([
+        coursesAPI.getEconometricCourses(),
+        coursesAPI.getLearningCourses(),
+        coursesAPI.getEnrollments(),
+      ]);
 
       // Fusion des deux types de cours
       const allCourses = [...econometricCourses, ...learningCourses];
@@ -43,8 +42,7 @@ const CourseDetail: React.FC = () => {
 
       if (found) {
         const enrolled = enrollmentsData.some(
-          (e) =>
-            e.econometric_course === found.id || e.learning_course === found.id
+          (e) => e.econometric_course === found.id || e.learning_course === found.id
         );
         setIsEnrolled(enrolled);
       }
@@ -87,9 +85,7 @@ const CourseDetail: React.FC = () => {
           </div>
 
           <div className="p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {course.title}
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{course.title}</h1>
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
               {course.description}
             </p>
@@ -129,3 +125,4 @@ const CourseDetail: React.FC = () => {
 };
 
 export default CourseDetail;
+
