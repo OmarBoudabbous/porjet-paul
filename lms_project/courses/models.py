@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import StudentProfile
+from django.conf import settings
 
 # 📂 Category
 
@@ -76,18 +77,23 @@ class Lesson(models.Model):
 
 # 🎟 Enrollment
 class Enrollment(models.Model):
-    student = models.ForeignKey(
-        StudentProfile, on_delete=models.CASCADE, related_name="enrollments")
-
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     econometric_course = models.ForeignKey(
-        CourseEconometricModel, null=True, blank=True, on_delete=models.CASCADE
+        "courses.CourseEconometricModel",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="enrollments",
     )
     learning_course = models.ForeignKey(
-        CourseLearningModule, null=True, blank=True, on_delete=models.CASCADE
+        "courses.CourseLearningModule",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="enrollments",
     )
-
     date_enrolled = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)  # ← for future paid bookings
 
     def __str__(self):
-        course = self.econometric_course or self.learning_course
-        return f"{self.student.user.email} enrolled in {course.title}"
+        return f"{self.student} enrolled in {self.econometric_course or self.learning_course}"

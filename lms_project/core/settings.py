@@ -91,8 +91,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'lms_db',          # 🔹 your database name (create it in MySQL)
         'USER': 'root',            # 🔹 your MySQL user
-        'PASSWORD': '1234',
-        'HOST': '127.0.0.1',       # localhost
+        'PASSWORD': '',
+        'HOST': 'localhost',       # localhost
         'PORT': '3306',            # default MySQL port
         'OPTIONS': {
             'charset': 'utf8mb4',  # supports special characters & emojis
