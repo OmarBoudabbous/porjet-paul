@@ -1,12 +1,6 @@
 from rest_framework import serializers
 from .models import Category, CourseEconometricModel, CourseLearningModule, Lesson, Enrollment
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
-
-
 class EconometricCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseEconometricModel
@@ -28,4 +22,21 @@ class LessonSerializer(serializers.ModelSerializer):
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
+        fields = "__all__"
+
+
+class CourseEconometricSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseEconometricModel
+        fields = "__all__"
+
+
+class CourseLearningSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseLearningModule
+        fields = "__all__"
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = "__all__"

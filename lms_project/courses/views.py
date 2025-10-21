@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from .models import Category, CourseEconometricModel, CourseLearningModule, Lesson, Enrollment
 from .serializers import (
     CategorySerializer, EconometricCourseSerializer, LearningCourseSerializer,
+    CourseEconometricSerializer, CourseLearningSerializer,
     LessonSerializer, EnrollmentSerializer
 )
 
@@ -123,3 +124,125 @@ class EconometricCourseDetail(generics.RetrieveAPIView):
 class LearningCourseDetail(generics.RetrieveAPIView):
     queryset = CourseLearningModule.objects.all()
     serializer_class = LearningCourseSerializer
+
+class EconometricCourseAddView(generics.CreateAPIView):
+    queryset = CourseEconometricModel.objects.all()
+    serializer_class = CourseEconometricSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Optionally you could link to instructor later
+        serializer.save()
+
+
+# 🟩 Learning Course Add (POST)
+class LearningCourseAddView(generics.CreateAPIView):
+    queryset = CourseLearningModule.objects.all()
+    serializer_class = CourseLearningSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Optionally link instructor here too
+        serializer.save()
+
+
+class EconometricCourseAddView(generics.CreateAPIView):
+    """Instructor can create new Econometric Courses"""
+    queryset = CourseEconometricModel.objects.all()
+    serializer_class = EconometricCourseSerializer
+    permission_classes = [permissions.IsAuthenticated]  # or [permissions.IsAdminUser] if restricted
+
+    def perform_create(self, serializer):
+        serializer.save()  # later you can link instructor=user if needed
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            print("❌ Validation errors:", serializer.errors)  # 👈 Debug line
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class LearningCourseAddView(generics.CreateAPIView):
+    """Instructor can create new Learning Courses"""
+    queryset = CourseLearningModule.objects.all()
+    serializer_class = LearningCourseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class EconometricCourseUpdateView(generics.UpdateAPIView):
+    queryset = CourseEconometricModel.objects.all()
+    serializer_class = CourseEconometricSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+# ✅ Update learning course
+class LearningCourseUpdateView(generics.UpdateAPIView):
+    queryset = CourseLearningModule.objects.all()
+    serializer_class = CourseLearningSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class EconometricCourseDelete(generics.DestroyAPIView):
+    queryset = CourseEconometricModel.objects.all()
+    serializer_class = CourseEconometricSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({"message": "Econometric course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+# 🗑 Learning course delete
+class LearningCourseDelete(generics.DestroyAPIView):
+    queryset = CourseLearningModule.objects.all()
+    serializer_class = CourseLearningSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({"message": "Learning course deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+
+class CategoryCreateAPIView(generics.GenericAPIView):
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ✅ UPDATE CATEGORY
+class CategoryUpdateAPIView(generics.UpdateAPIView):
+    def put(self, request, pk):
+        try:
+            category = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CategorySerializer(category, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ✅ DELETE CATEGORY
+class CategoryDeleteAPIView(generics.DestroyAPIView):
+    def delete(self, request, pk):
+        try:
+            category = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        category.delete()
+        return Response({"message": "Category deleted successfully"}, status=status.HTTP_204_NO_CONTENT)

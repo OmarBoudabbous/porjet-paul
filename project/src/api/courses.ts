@@ -1,25 +1,14 @@
 import apiClient from './axios';
 import { Course, Category, Lesson, Enrollment } from '../types';
 
+const BASE_URL = "http://127.0.0.1:8000/api/courses/";
+
 export const coursesAPI = {
+
   // Categories
   async getCategories(): Promise<Category[]> {
     const response = await apiClient.get('/courses/categories/');
     return response.data;
-  },
-
-  async createCategory(data: { name: string; description: string }): Promise<Category> {
-    const response = await apiClient.post('/courses/categories/', data);
-    return response.data;
-  },
-
-  async updateCategory(id: number, data: { name: string; description: string }): Promise<Category> {
-    const response = await apiClient.put(`/courses/categories/${id}/`, data);
-    return response.data;
-  },
-
-  async deleteCategory(id: number): Promise<void> {
-    await apiClient.delete(`/courses/categories/${id}/`);
   },
 
   // Econometric Courses
@@ -34,7 +23,6 @@ export const coursesAPI = {
     return response.data;
   },
 
-  // All courses (combined)
   // All courses (combined)
   async getAllCourses(): Promise<Course[]> {
     const [econometric, learning] = await Promise.all([
@@ -62,6 +50,20 @@ export const coursesAPI = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+    });
+    return response.data;
+  },
+
+  async createEconometricCourse(data: FormData): Promise<Course> {
+    const response = await apiClient.post('/courses/econometric/add/', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  async createCourseLearning(data: FormData): Promise<Course> {
+    const response = await apiClient.post('/courses/learning/add/', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
   },
@@ -146,5 +148,50 @@ export const coursesAPI = {
     const response = await apiClient.post(endpoint, payload);
     return response.data;
   },
+
+  async updateEconometricCourse(id: number, data: FormData): Promise<Course> {
+    const response = await apiClient.put(`/courses/econometric/${id}/update/`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  async updateLearningCourse(id: number, data: FormData): Promise<Course> {
+    const response = await apiClient.put(`/courses/learning/${id}/update/`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+  // 🔹 Delete an Econometric course
+  async deleteEconometricCourse(id: number): Promise<void> {
+    await apiClient.delete(`/courses/econometric/${id}/delete/`);
+  },
+
+  // 🔹 Delete a Learning course
+  async deleteLearningCourse(id: number): Promise<void> {
+    await apiClient.delete(`/courses/learning/${id}/delete/`);
+  },
+  createCategory: async (data: { name: string; description: string }) => {
+    const response = await apiClient.post('/courses/categories/add/', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // ✅ Update category
+  updateCategory: async (id: number, data: { name: string; description: string }) => {
+    const response = await apiClient.put(`/courses/categories/${id}/update/`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  // ✅ Delete category
+  deleteCategory: async (id: number) => {
+    await apiClient.delete(`/courses/categories/${id}/delete/`);
+  },
+
 };
 
